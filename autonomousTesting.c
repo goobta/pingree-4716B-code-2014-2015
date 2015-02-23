@@ -78,7 +78,38 @@ task autonomous()
   // Insert user code here.
   // .....................................................................................
 
-	AutonomousCodePlaceholderForTesting();  // Remove this function call once you have "real" code.
+	driveTrainLeft(127);
+	driveTrainRight(127);
+	wait1Msec(250);
+
+	driveTrainLeft(127);
+	driveTrainRight(-127);
+	wait1Msec(350);
+
+	driveTrainLeft(0);
+	driveTrainRight(0);
+	builderClaw(127);
+	wait1Msec(440);
+
+	driveTrainLeft(0);
+	driveTrainRight(0);
+	builderClaw(0);
+	wait1Msec(500);
+
+	driveTrainLeft(-127);
+	driveTrainRight(-127);
+	builderClaw(0);
+	wait1Msec(115);
+
+	driveTrainLeft(0);
+	driveTrainRight(0);
+	builderClaw(-127);
+	wait1Msec(250);
+
+	driveTrainLeft(0);
+	driveTrainRight(0);
+	builderClaw(0);
+	wait1Msec(50);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -93,8 +124,5 @@ task autonomous()
 task usercontrol()
 {
 	// User control code here, inside the loop
-
-	driveTrainLeft(127);
-	driveTrainRight(-127);
-	wait1Msec(500);
+	int x = 5;
 }
