@@ -1,2 +1,3 @@
-# pingree-4716B-code-2014-2015
-The code for 4716B
+# 4716B's code
+This is the code for Pingree Vex Robotics 4716B for Vex Skyrise. 
+All the progress will be tracked here.
