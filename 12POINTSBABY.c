@@ -7,6 +7,8 @@
 #pragma config(Motor,  port8,           liftRightTop,  tmotorVex393, openLoop)
 #pragma config(Motor,  port9,           liftRightBack, tmotorVex393, openLoop)
 
+////////////////////////////////// Functions //////////////////////////////////
+
 void drive(int power) {
 	motor[driveLeft] = power;
 	motor[driveRight] = power;
@@ -35,6 +37,8 @@ void builderClaw(int power) {
 void cubeClaw(int power) {
 	motor[cube] = power;
 }
+
+////////////////////////////////// Functions be Done //////////////////////////////////
 
 task main()
 {
