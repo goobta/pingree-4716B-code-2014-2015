@@ -44,7 +44,6 @@ task main()
 {
 	driveTrainLeft(127);
 	driveTrainRight(-127);
-	builderClaw(127);
 	wait1Msec(500);
 
 	// driveTrainLeft(127);
