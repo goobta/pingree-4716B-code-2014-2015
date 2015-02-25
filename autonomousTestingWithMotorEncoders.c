@@ -61,7 +61,7 @@ void cubeClaw(int power) {
 
 void resetEncoders() {
 	nMotorEncoder[driveRight] = 0;
-	nMotorEncoder[driveLeft] = 0;  
+	nMotorEncoder[driveLeft] = 0;
 }
 
 void pre_auton()
@@ -91,9 +91,49 @@ task autonomous()
 
 	resetEncoders();
 
-	while(nMotorEncoder[driveRight] < 474.4 && nMotorEncoder[driveLeft] < 474.4) {
-		drive(127);
-	}	
+	while(nMotorEncoder[driveRight] <= 475) {
+		drive(75);
+	}
+
+	drive(-20);
+	wait1Msec(75);
+
+	resetEncoders();
+
+	drive(0);
+	wait1Msec(10);
+
+	while(nMotorEncoder[driveLeft] <= 200)  {
+		driveTrainLeft(80);
+		driveTrainRight(-80);
+	}
+
+	resetEncoders();
+
+	drive(0);
+	builderClaw(127);
+	wait1Msec(400);
+
+	builderClaw(0);
+	wait1Msec(500);
+
+	driveTrainLeft(-127);
+	driveTrainRight(-127);
+	builderClaw(0);
+	wait1Msec(275);
+
+	drive(0);
+	wait1Msec(100);
+
+	drive(0);
+	builderClaw(-127);
+	wait1Msec(100);
+
+	builderClaw(0);
+	wait1Msec(10);
+
+	drive(0);
+	wait1Msec(20);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
