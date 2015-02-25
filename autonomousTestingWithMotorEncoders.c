@@ -59,6 +59,10 @@ void cubeClaw(int power) {
 	motor[cube] = power;
 }
 
+void resetEncoders() {
+	nMotorEncoder[driveRight] = 0;
+	nMotorEncoder[driveLeft] = 0;  
+}
 
 void pre_auton()
 {
@@ -85,7 +89,11 @@ task autonomous()
   // Insert user code here.
   // .....................................................................................
 
-	AutonomousCodePlaceholderForTesting();  // Remove this function call once you have "real" code.
+	resetEncoders();
+
+	while(nMotorEncoder[driveRight] < 474.4 && nMotorEncoder[driveLeft] < 474.4) {
+		drive(127);
+	}	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
