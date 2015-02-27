@@ -112,7 +112,7 @@ task autonomous()
 
 	drive(0);
 	builderClaw(127);
-	wait1Msec(400);
+	wait1Msec(425);
 
 	builderClaw(0);
 	wait1Msec(500);
@@ -131,7 +131,7 @@ task autonomous()
 
 	drive(0);
 	builderClaw(-127);
-	wait1Msec(100);
+	wait1Msec(150);
 
 	builderClaw(0);
 	wait1Msec(10);
@@ -143,9 +143,18 @@ task autonomous()
 
 	drive(0);
 	lift(127);
-	wait1Msec(800);
+	wait1Msec(950);
 
 	lift(0);
+	wait1Msec(10);
+
+	resetEncoders();
+	while(nMotorEncoder[driveLeft] <= 133) {
+		driveTrainLeft(90);
+		driveTrainRight(-90);
+	}
+
+	drive(0);
 	wait1Msec(10);
 }
 
