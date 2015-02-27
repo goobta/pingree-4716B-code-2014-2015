@@ -143,7 +143,7 @@ task autonomous()
 
 	drive(0);
 	lift(127);
-	wait1Msec(1000);
+	wait1Msec(800);
 
 	lift(0);
 	wait1Msec(10);
