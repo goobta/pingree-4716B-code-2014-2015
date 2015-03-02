@@ -91,7 +91,7 @@ task autonomous()
 
 	resetEncoders();
 
-	while(nMotorEncoder[driveRight] <= 475) {
+	while(nMotorEncoder[driveRight] <= 600) {
 		drive(75);
 	}
 
@@ -103,7 +103,7 @@ task autonomous()
 	drive(0);
 	wait1Msec(10);
 
-	while(nMotorEncoder[driveLeft] <= 200)  {
+	while(nMotorEncoder[driveLeft] <= 295)  {
 		driveTrainLeft(90);
 		driveTrainRight(-90);
 	}
@@ -111,51 +111,51 @@ task autonomous()
 	resetEncoders();
 
 	drive(0);
-	builderClaw(127);
+//	builderClaw(127);
 	wait1Msec(425);
 
-	builderClaw(0);
-	wait1Msec(500);
+//	builderClaw(0);
+//	wait1Msec(500);
 
-	while(nMotorEncoder[driveRight] > -400) {
-		drive(-80);
-	}
+//	while(nMotorEncoder[driveRight] > -400) {
+//		drive(-80);
+//	}
 
-	//driveTrainLeft(-127);
-	//driveTrainRight(-127);
-	//builderClaw(0);
-	//wait1Msec(275);
+//	//driveTrainLeft(-127);
+//	//driveTrainRight(-127);
+//	//builderClaw(0);
+//	//wait1Msec(275);
 
-	drive(0);
-	wait1Msec(100);
+//	drive(0);
+//	wait1Msec(100);
 
-	drive(0);
-	builderClaw(-127);
-	wait1Msec(150);
+//	drive(0);
+//	builderClaw(-127);
+//	wait1Msec(150);
 
-	builderClaw(0);
-	wait1Msec(10);
+//	builderClaw(0);
+//	wait1Msec(10);
 
-	resetEncoders();
-	while(nMotorEncoder[driveRight] < 600) {
-		drive(127);
-	}
+//	resetEncoders();
+//	while(nMotorEncoder[driveRight] < 600) {
+//		drive(127);
+//	}
 
-	drive(0);
-	lift(127);
-	wait1Msec(950);
+//	drive(0);
+//	lift(127);
+//	wait1Msec(950);
 
-	lift(0);
-	wait1Msec(10);
+//	lift(0);
+//	wait1Msec(10);
 
-	resetEncoders();
-	while(nMotorEncoder[driveLeft] <= 133) {
-		driveTrainLeft(90);
-		driveTrainRight(-90);
-	}
+//	resetEncoders();
+//	while(nMotorEncoder[driveLeft] <= 133) {
+//		driveTrainLeft(90);
+//		driveTrainRight(-90);
+//	}
 
-	drive(0);
-	wait1Msec(10);
+//	drive(0);
+//	wait1Msec(10);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
