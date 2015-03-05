@@ -1,3 +1,4 @@
+#pragma config(Sensor, dgtl1,  limitSwitch,    sensorTouch)
 #pragma config(Motor,  port2,           driveRight,    tmotorVex393, openLoop, reversed)
 #pragma config(Motor,  port3,           driveLeft,     tmotorVex393, openLoop)
 #pragma config(Motor,  port4,           builder,       tmotorVex393, openLoop)
@@ -129,18 +130,18 @@ void lift(int power) {
 void builderClaw(int power, bool enabled) {
 	if(enabled == true) {
 		if(power == 0) {
-			motor[builder] = power; 
+			motor[builder] = power;
 		}
 		else if(power > 0) {
 			if(SensorValue(limitSwitch) != 1) {
-				motor[builder] = power; 
+				motor[builder] = power;
 			}
 			else {
 				motor[builder] = 0;
 			}
 		}
 		else if(power < 0) {
-			motor[builder] = power; 
+			motor[builder] = power;
 		}
 	}
 	else {
@@ -150,7 +151,7 @@ void builderClaw(int power, bool enabled) {
 
 bool changeBuilderClawMode(bool currentMode) {
 	bool newMode;
-	if(currenMode == true) {
+	if(currentMode == true) {
 		newMode = false;
 	}
 	else if(currentMode == false) {
@@ -340,12 +341,12 @@ task usercontrol()
 		if (vexRT[Btn7U] == 1) {
 			motor[driveLeft] = 0;
 			motor[driveRight] = 0;
-			builderClaw(0, builderLimitSwitchEnabled)
+			builderClaw(0, builderLimitSwitchEnabled);
 			wait1Msec(100);
 
 			builderLimitSwitchEnabled = changeBuilderClawMode(builderLimitSwitchEnabled);
 
-			builderClaw(0, builderLimitSwitchEnabled)
+			builderClaw(0, builderLimitSwitchEnabled);
 			motor[driveLeft] = 0;
 			motor[driveRight] = 0;
 			wait1Msec(100);
