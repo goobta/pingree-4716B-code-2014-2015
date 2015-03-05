@@ -91,75 +91,98 @@ task autonomous()
 
 	resetEncoders();
 
-	while(nMotorEncoder[driveRight] <= 600) {
-		drive(75);
+	while(nMotorEncoder[driveRight] < 449) {
+		drive(70);
 	}
 
-	drive(-20);
-	wait1Msec(75);
+	drive(-5);
+	wait1Msec(10);
 
+	drive(0);
 	resetEncoders();
-
-	drive(0);
 	wait1Msec(10);
 
-	while(nMotorEncoder[driveLeft] <= 330)  {
-		driveTrainLeft(90);
-		driveTrainRight(-90);
-	}
-
-	resetEncoders();
-
-	drive(0);
-	builderClaw(127);
-	wait1Msec(440);
-
-  builderClaw(0);
-	wait1Msec(500);
-
-	while(nMotorEncoder[driveRight] > -850) {
-		drive(-80);
-	}
-
-	drive(0);
-	builderClaw(-127);
-	wait1Msec(50);
-
-	builderClaw(0);
-	wait1Msec(10);
-
-	lift(127);
-	wait1Msec(950);
-
-	lift(0);
-	wait1Msec(10);
-
-	resetEncoders();
-	while(nMotorEncoder[driveRight] < 350) {
-		drive(127);
+	while(nMotorEncoder[driveLeft] < 841) {
+		driveTrainLeft(70);
+		driveTrainRight(-70);
 	}
 
 	drive(0);
 	wait1Msec(10);
 
-	resetEncoders();
-	while(nMotorEncoder[driveLeft] <= 458) {
-		driveTrainLeft(80);
-		driveTrainRight(-80);
-	}
+//	while(nMotorEncoder[driveRight] <= 600) {
+//		drive(75);
+//	}
 
-	drive(0);
-	wait1Msec(10);
+//	drive(-20);
+//	wait1Msec(75);
+
+//	resetEncoders();
+
+//	drive(0);
+//	wait1Msec(10);
+
+//	while(nMotorEncoder[driveLeft] <= 330)  {
+//		driveTrainLeft(90);
+//		driveTrainRight(-90);
+//	}
+
+//	resetEncoders();
+
+//	drive(0);
+//	builderClaw(127);
+//	wait1Msec(440);
+
+//  builderClaw(0);
+//	wait1Msec(500);
+
+//	while(nMotorEncoder[driveRight] > -800) {
+//		drive(-80);
+//	}
+
+//	drive(50);
+//  wait1Msec(50);
+
+//	drive(0);
+//	builderClaw(-127);
+//	wait1Msec(50);
+
+//	builderClaw(0);
+//	wait1Msec(10);
+
+////	builderClaw(0);
+////	wait1Msec(10);
+
+////	resetEncoders();
+////	while(nMotorEncoder[driveRight] < 600) {
+////		drive(127);
+////	}
+
+////	drive(0);
+////	lift(127);
+////	wait1Msec(950);
+
+////	lift(0);
+////	wait1Msec(10);
+
+////	resetEncoders();
+////	while(nMotorEncoder[driveLeft] <= 133) {
+////		driveTrainLeft(90);
+////		driveTrainRight(-90);
+////	}
+
+////	drive(0);
+////	wait1Msec(10);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-//
-//                                 User Control Task
-//
-// This task is used to control your robot during the user control phase of a VEX Competition.
-// You must modify the code to add your own robot specific commands here.
-//
-/////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+////
+////                                 User Control Task
+////
+//// This task is used to control your robot during the user control phase of a VEX Competition.
+//// You must modify the code to add your own robot specific commands here.
+////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 task usercontrol()
 {
