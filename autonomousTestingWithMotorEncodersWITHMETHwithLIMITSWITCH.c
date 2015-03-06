@@ -59,7 +59,7 @@ void builderClawOpen() {
 }
 void builderClawClose() {
 	while(SensorValue[limitSwitch] != 1) {
-		builderClaw(-127)
+		builderClaw(-127);
 	}
 }
 

@@ -57,7 +57,7 @@ void builderClaw(int power) {
 }
 void builderClawClose() {
 	while(SensorValue[limitSwitch] != 1) {
-		builderClaw(-127);
+		builderClaw(127);
 	}
 
 	builderClaw(0);
@@ -66,10 +66,10 @@ void builderClawClose() {
 
 void builderClawOpen() {
 	while(SensorValue[limitSwitch] == 1) {
-		builderClaw(127);
+		builderClaw(-127);
 	}
 	builderClaw(127);
-	wait1Msec(75);
+	wait1Msec(150);
 
 	builderClaw(0);
 	wait1Msec(10);
@@ -154,7 +154,7 @@ task autonomous()
 	wait1Msec(10);
 
 	resetEncoders();
-	while(nMotorEncoder[driveRight] < 350) {
+	while(nMotorEncoder[driveRight] < 425) {
 		drive(127);
 	}
 
@@ -162,9 +162,14 @@ task autonomous()
 	wait1Msec(10);
 
 	resetEncoders();
-	while(nMotorEncoder[driveLeft] <= 458) {
+	while(nMotorEncoder[driveLeft] <= 658) {
 		driveTrainLeft(80);
 		driveTrainRight(-80);
+	}
+
+	resetEncoders();
+	while(nMotorEncoder[driveLeft] >= -40) {
+		drive(-80);
 	}
 
 	drive(0);
