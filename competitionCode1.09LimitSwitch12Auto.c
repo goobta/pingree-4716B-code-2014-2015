@@ -1,6 +1,9 @@
+#pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, dgtl1,  limitSwitch,    sensorTouch)
-#pragma config(Motor,  port2,           driveRight,    tmotorVex393, openLoop, reversed)
-#pragma config(Motor,  port3,           driveLeft,     tmotorVex393, openLoop)
+#pragma config(Sensor, I2C_1,  rightIEM,       sensorQuadEncoderOnI2CPort,    , AutoAssign)
+#pragma config(Sensor, I2C_2,  leftIEM,        sensorQuadEncoderOnI2CPort,    , AutoAssign)
+#pragma config(Motor,  port2,           driveRight,    tmotorVex393, openLoop, reversed, encoder, encoderPort, I2C_1, 1000)
+#pragma config(Motor,  port3,           driveLeft,     tmotorVex393, openLoop, encoder, encoderPort, I2C_2, 1000)
 #pragma config(Motor,  port4,           builder,       tmotorVex393, openLoop, reversed)
 #pragma config(Motor,  port5,           cube,          tmotorVex393, openLoop)
 #pragma config(Motor,  port6,           liftLeftTop,   tmotorVex393, openLoop, reversed)
@@ -25,6 +28,7 @@ const short centerButton = 2;
 const short rightButton = 4;
 
 int userChoice;
+bool builderLimitSwitchEnabled = true;
 
 void waitForPress() {
 	while(nLCDButtons == 0) {}
@@ -67,18 +71,7 @@ void pre_auton()
 			break;
   	}
   	else if(nLCDButtons == rightButton) {
-  		while(true) {
-			displayLCDCenteredString(1, "R | L");
-			if(nLCDButtons == leftButton) {
-				userChoice = 3;
-			}
-			else if(nLCDButtons == rightButton) {
-				userChoice = 4;
-			}
-			else if(nLCDButtons == centerButton) {
-				break;
-			}
-		}
+  		userChoice = 2;
   		break;
   	}
   	else if(nLCDButtons == centerButton) {
@@ -128,12 +121,12 @@ void lift(int power) {
 	motor[liftRightBack] = power;
 }
 
-void builderClaw(int power, bool enabled) {
-	if(enabled == true) {
+void builderClaw(int power) {
+	if(builderLimitSwitchEnabled == true) {
 		if(power == 0) {
 			motor[builder] = power;
 		}
-		else if(power > 0) {
+		else if(power < 0) {
 			if(SensorValue(limitSwitch) != 1) {
 				motor[builder] = power;
 			}
@@ -141,7 +134,7 @@ void builderClaw(int power, bool enabled) {
 				motor[builder] = 0;
 			}
 		}
-		else if(power < 0) {
+		else if(power > 0) {
 			motor[builder] = power;
 		}
 	}
@@ -150,15 +143,33 @@ void builderClaw(int power, bool enabled) {
 	}
 }
 
-bool changeBuilderClawMode(bool currentMode) {
-	bool newMode;
-	if(currentMode == true) {
-		newMode = false;
+void builderClawClose() {
+	while(SensorValue[limitSwitch] != 1) {
+		builderClaw(-127);
 	}
-	else if(currentMode == false) {
-		newMode = true;
+
+	builderClaw(0);
+	wait1Msec(10);
+}
+
+void builderClawOpen() {
+	while(SensorValue[limitSwitch] == 1) {
+		builderClaw(127);
 	}
-	return newMode;
+	builderClaw(127);
+	wait1Msec(400);
+
+	builderClaw(0);
+	wait1Msec(10);
+}
+
+void changeBuilderClawMode() {
+	if(builderLimitSwitchEnabled == true) {
+		builderLimitSwitchEnabled = false;
+	}
+	else if(builderLimitSwitchEnabled== false) {
+		builderLimitSwitchEnabled = true;
+	}
 }
 
 void cubeClaw(int power) {
@@ -211,24 +222,27 @@ float changeSpeed(float currentSpeed) {
 	return newSpeed;
 }
 
-void frontFacingClaw(int power, int mode, bool clawMode) {
+void frontFacingClaw(int power, int mode) {
 	if(mode == 1) {
 		cubeClaw(power);
 	}
 	else if(mode == -1) {
-		builderClaw(power, clawMode);
+		builderClaw(power);
 	}
 }
 
-void rearFacingClaw(int power, int mode, bool clawMode) {
+void rearFacingClaw(int power, int mode) {
 	if(mode == 1) {
-		builderClaw(power, clawMode);
+		builderClaw(power);
 	}
 	else if(mode == -1) {
 		cubeClaw(power);
 	}
 }
-
+void resetEncoders() {
+	nMotorEncoder[driveRight] = 0;
+	nMotorEncoder[driveLeft] = 0;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 task autonomous()
@@ -241,10 +255,230 @@ task autonomous()
 			wait1Msec(50);
 			break;
 		case 2:
-			drive(-127);
-			wait1Msec(500);
-			drive(0);
-			wait1Msec(50);
+		resetEncoders();
+
+	while(nMotorEncoder[driveRight] <= 600) {
+		drive(75);
+	}
+
+	drive(-20);
+	wait1Msec(75);
+
+	resetEncoders();
+
+	drive(0);
+	wait1Msec(10);
+
+	while(nMotorEncoder[driveLeft] <= 200)  {
+		driveTrainLeft(90);
+		driveTrainRight(-90);
+	}
+
+	resetEncoders();
+
+	drive(0);
+	wait1Msec(10);
+
+	builderClawOpen();
+
+  builderClaw(0);
+	wait1Msec(500);
+
+	while(nMotorEncoder[driveRight] > -275) {
+		drive(-80);
+	}
+
+	drive(0);
+	wait1Msec(50);
+
+	builderClaw(-127);
+	wait1Msec(900);
+
+	builderClaw(0);
+	lift(127);
+	wait1Msec(1500);
+
+	lift(0);
+	wait1Msec(10);
+
+	resetEncoders();
+	while(nMotorEncoder[driveRight] < 550) {
+		drive(80);
+	}
+
+	drive(0);
+	wait1Msec(10);
+
+	resetEncoders();
+	while(nMotorEncoder[driveLeft] <= 370) {
+		driveTrainLeft(80);
+		driveTrainRight(-80);
+	}
+
+	drive(0);
+	wait1Msec(250);
+
+	resetEncoders();
+	while(nMotorEncoder[driveLeft] >= -45) {
+		drive(-80);
+	}
+
+	drive(0);
+	wait1Msec(300);
+
+	lift(-127);
+	wait1Msec(500);
+
+	lift(0);
+	wait1Msec(1000);
+
+	builderClawOpen();
+
+	builderClaw(0);
+	wait1Msec(500);
+
+	builderClaw(0);
+	wait1Msec(500);
+
+	resetEncoders();
+	while(nMotorEncoder[driveRight] < 275) {
+		drive(80);
+	}
+
+	drive(0);
+	wait1Msec(50);
+
+	resetEncoders();
+	while(nMotorEncoder[driveLeft] >= -370) {
+		driveTrainLeft(-80);
+		driveTrainRight(80);
+	}
+
+	drive(0);
+	wait1Msec(10);
+
+	resetEncoders();
+	while(nMotorEncoder[driveRight] > -540) {
+		drive(-80);
+	}
+
+	builderClaw(-127);
+	wait1Msec(900);
+
+	builderClaw(0);
+	lift(127);
+	wait1Msec(1500);
+
+	lift(0);
+	wait1Msec(10);
+
+	resetEncoders();
+	while(nMotorEncoder[driveRight] < 540) {
+		drive(80);
+	}
+
+	drive(0);
+	wait1Msec(10);
+
+	resetEncoders();
+	while(nMotorEncoder[driveLeft] <= 370) {
+		driveTrainLeft(80);
+		driveTrainRight(-80);
+	}
+
+	drive(0);
+	wait1Msec(250);
+
+	resetEncoders();
+	while(nMotorEncoder[driveLeft] >= -45) {
+		drive(-80);
+	}
+
+	drive(0);
+	wait1Msec(300);
+
+	lift(-127);
+	wait1Msec(500);
+
+	lift(0);
+	wait1Msec(1000);
+
+	builderClawOpen();
+
+	builderClaw(0);
+	wait1Msec(500);
+
+	drive(127);
+	wait1Msec(100);
+
+	drive(0);
+	wait1Msec(10);
+///////////////////////////////////BEYOND THIS IS TESTING///////////////////////////////
+
+	//resetEncoders();
+	//while(nMotorEncoder[driveLeft] <= 44) {
+	//	drive(80);
+	//}
+
+	//resetEncoders();
+	//while(nMotorEncoder[driveLeft] >= -585) {
+	//	driveTrainLeft(-80);
+	//	driveTrainRight(80);
+	//}
+
+	//drive(0);
+	//wait1Msec(100);
+
+	//resetEncoders();
+	//while(nMotorEncoder[driveRight] > 475) {
+	//	drive(-80);
+	//}
+
+	//drive(0);
+	//wait1Msec(50);
+
+	//builderClaw(127);
+	//wait1Msec(750);
+
+	//builderClaw(0);
+	//lift(127);
+	//wait1Msec(1500);
+
+	//lift(0);
+	//wait1Msec(10);
+
+	//resetEncoders();
+	//while(nMotorEncoder[driveRight] < 475) {
+	//	drive(80);
+	//}
+
+	//drive(0);
+	//wait1Msec(10);
+
+	//resetEncoders();
+	//while(nMotorEncoder[driveLeft] <= 585) {
+	//	driveTrainLeft(80);
+	//	driveTrainRight(-80);
+	//}
+
+	//drive(0);
+	//wait1Msec(250);
+
+	//resetEncoders();
+	//while(nMotorEncoder[driveLeft] >= -44) {
+	//	drive(-80);
+	//}
+
+	//drive(0);
+	//wait1Msec(10);
+
+	//lift(-50);
+	//wait1Msec(300);
+
+	//lift(0);
+	//wait1Msec(1000);
+
+	//builderClawOpen();
 			break;
 		case 3:
 			break;
@@ -263,7 +497,6 @@ task usercontrol()
 	float joy_left;
 	int mode = 1;
 	float speed = 1.0;
-	bool builderLimitSwitchEnabled = true;
 
 	while (true)
 	{
@@ -298,23 +531,23 @@ task usercontrol()
 		//To open
 
 		if(vexRT[Btn6D] == 1) {
-			frontFacingClaw(-127, mode, builderLimitSwitchEnabled);
+			frontFacingClaw(-127, mode);
 		}
 		else if(vexRT[Btn6U] == 1) {
-			frontFacingClaw(127, mode, builderLimitSwitchEnabled);
+			frontFacingClaw(127, mode);
 		}
 		else {
-			frontFacingClaw(0, mode, builderLimitSwitchEnabled);
+			frontFacingClaw(0, mode);
 		}
 
 		if(vexRT[Btn8D] == 1) {
-			rearFacingClaw(-127, mode, builderLimitSwitchEnabled);
+			rearFacingClaw(-127, mode);
 		}
 		else if(vexRT[Btn8U] == 1) {
-			rearFacingClaw(127, mode, builderLimitSwitchEnabled);
+			rearFacingClaw(127, mode);
 		}
 		else {
-			rearFacingClaw(0, mode, builderLimitSwitchEnabled);
+			rearFacingClaw(0, mode);
 		}
 
 		if (vexRT[Btn7L] == 1) {
@@ -342,12 +575,12 @@ task usercontrol()
 		if (vexRT[Btn7U] == 1) {
 			motor[driveLeft] = 0;
 			motor[driveRight] = 0;
-			builderClaw(0, builderLimitSwitchEnabled);
+			builderClaw(0);
 			wait1Msec(100);
 
-			builderLimitSwitchEnabled = changeBuilderClawMode(builderLimitSwitchEnabled);
+			changeBuilderClawMode();
 
-			builderClaw(0, builderLimitSwitchEnabled);
+			builderClaw(0);
 			motor[driveLeft] = 0;
 			motor[driveRight] = 0;
 			wait1Msec(100);

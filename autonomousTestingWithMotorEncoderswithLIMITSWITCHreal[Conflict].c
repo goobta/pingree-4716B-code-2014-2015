@@ -4,7 +4,7 @@
 #pragma config(Sensor, I2C_2,  leftIEM,        sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Motor,  port2,           driveRight,    tmotorVex393, openLoop, reversed, encoder, encoderPort, I2C_1, 1000)
 #pragma config(Motor,  port3,           driveLeft,     tmotorVex393, openLoop, encoder, encoderPort, I2C_2, 1000)
-#pragma config(Motor,  port4,           builder,       tmotorVex393, openLoop)
+#pragma config(Motor,  port4,           builder,       tmotorVex393, openLoop, reversed)
 #pragma config(Motor,  port5,           cube,          tmotorVex393, openLoop)
 #pragma config(Motor,  port6,           liftLeftTop,   tmotorVex393, openLoop, reversed)
 #pragma config(Motor,  port7,           liftLeftBack,  tmotorVex393, openLoop, reversed)
@@ -123,7 +123,7 @@ task autonomous()
 	drive(0);
 	wait1Msec(10);
 
-	while(nMotorEncoder[driveLeft] <= 225)  {
+	while(nMotorEncoder[driveLeft] <= 300)  {
 		driveTrainLeft(90);
 		driveTrainRight(-90);
 	}
@@ -138,7 +138,7 @@ task autonomous()
   builderClaw(0);
 	wait1Msec(500);
 
-	while(nMotorEncoder[driveRight] > -520) {
+	while(nMotorEncoder[driveRight] > -570) {
 		drive(-80);
 	}
 
@@ -146,7 +146,7 @@ task autonomous()
 	wait1Msec(50);
 
 	builderClaw(127);
-	wait1Msec(800);
+	wait1Msec(700);
 
 	builderClaw(0);
 	lift(127);
@@ -162,9 +162,6 @@ task autonomous()
 
 	drive(0);
 	wait1Msec(10);
-
-	lift(-50);
-	wait1Msec(300);
 
 	resetEncoders();
 	while(nMotorEncoder[driveLeft] <= 585) {
@@ -209,6 +206,8 @@ task autonomous()
 	drive(0);
 	wait1Msec(100);
 
+	builderClawOpen();
+
 	resetEncoders();
 	while(nMotorEncoder[driveRight] > 475) {
 		drive(-80);
@@ -218,7 +217,7 @@ task autonomous()
 	wait1Msec(50);
 
 	builderClaw(127);
-	wait1Msec(750);
+	wait1Msec(700);
 
 	builderClaw(0);
 	lift(127);

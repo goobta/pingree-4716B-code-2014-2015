@@ -123,9 +123,9 @@ task autonomous()
 	drive(0);
 	wait1Msec(10);
 
-	while(nMotorEncoder[driveLeft] <= 225)  {
-		driveTrainLeft(90);
-		driveTrainRight(-90);
+	while(nMotorEncoder[driveLeft] >= -300)  {
+		driveTrainLeft(-90);
+		driveTrainRight(90);
 	}
 
 	resetEncoders();
@@ -138,7 +138,7 @@ task autonomous()
   builderClaw(0);
 	wait1Msec(500);
 
-	while(nMotorEncoder[driveRight] > -520) {
+	while(nMotorEncoder[driveRight] > -570) {
 		drive(-80);
 	}
 
@@ -146,7 +146,7 @@ task autonomous()
 	wait1Msec(50);
 
 	builderClaw(127);
-	wait1Msec(800);
+	wait1Msec(700);
 
 	builderClaw(0);
 	lift(127);
@@ -163,13 +163,10 @@ task autonomous()
 	drive(0);
 	wait1Msec(10);
 
-	lift(-50);
-	wait1Msec(300);
-
 	resetEncoders();
-	while(nMotorEncoder[driveLeft] <= 585) {
-		driveTrainLeft(80);
-		driveTrainRight(-80);
+	while(nMotorEncoder[driveLeft] >= -585) {
+		driveTrainLeft(-80);
+		driveTrainRight(80);
 	}
 
 	drive(0);
@@ -201,13 +198,15 @@ task autonomous()
 	}
 
 	resetEncoders();
-	while(nMotorEncoder[driveLeft] >= -585) {
-		driveTrainLeft(-80);
-		driveTrainRight(80);
+	while(nMotorEncoder[driveLeft] <= 585) {
+		driveTrainLeft(80);
+		driveTrainRight(-80);
 	}
 
 	drive(0);
 	wait1Msec(100);
+
+	builderClawOpen();
 
 	resetEncoders();
 	while(nMotorEncoder[driveRight] > 475) {
@@ -218,7 +217,7 @@ task autonomous()
 	wait1Msec(50);
 
 	builderClaw(127);
-	wait1Msec(750);
+	wait1Msec(700);
 
 	builderClaw(0);
 	lift(127);
@@ -236,9 +235,9 @@ task autonomous()
 	wait1Msec(10);
 
 	resetEncoders();
-	while(nMotorEncoder[driveLeft] <= 585) {
-		driveTrainLeft(80);
-		driveTrainRight(-80);
+	while(nMotorEncoder[driveLeft] >= -585) {
+		driveTrainLeft(-80);
+		driveTrainRight(80);
 	}
 
 	drive(0);
